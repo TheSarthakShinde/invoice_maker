@@ -17,6 +17,10 @@ if db_url.startswith("postgresql://"):
     db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 280,
+}
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
 db.init_app(app)
@@ -29,6 +33,13 @@ app.register_blueprint(auth_bp)
 
 from business import business_bp
 app.register_blueprint(business_bp)
+
+from crud import crud_bp
+app.register_blueprint(crud_bp)
+
+
+from datetime import timedelta
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=8)
 
 
 @app.route("/api/health")
