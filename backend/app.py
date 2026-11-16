@@ -27,6 +27,9 @@ import models  # noqa: F401
 from auth import auth_bp
 app.register_blueprint(auth_bp)
 
+from business import business_bp
+app.register_blueprint(business_bp)
+
 
 @app.route("/api/health")
 def health():
